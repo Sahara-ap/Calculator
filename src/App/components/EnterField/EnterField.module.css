@@ -1,0 +1,27 @@
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  min-height: 122px;
+  padding-top: 55px;
+  padding-bottom: 25px;
+
+
+}
+
+.input {
+  width: 100%;
+  padding: 8px 0 8px 20px;
+  color: #fff;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 400;
+  background-color: inherit;
+  border: none;
+  text-align: end;
+  outline: none;
+}
+
+.input:hover {
+  box-shadow: 0 0 4px 0 rgba(255 255 255 / 0.5);
+}
