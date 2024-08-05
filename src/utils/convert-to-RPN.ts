@@ -1,5 +1,5 @@
 export const convertToRPN = (userExpression: string) => {
-  const formattedUserExpression = userExpression.split(' ');
+  const userExpressionRange = userExpression.split(' ');
   const stack: TOperator[] = [];
   let queue = '';
 
@@ -9,7 +9,7 @@ export const convertToRPN = (userExpression: string) => {
     '/': number;
     '*': number;
   }
-  type TOperator = '+' | '-' | '/' | '*' | '(' | ')' | '%'
+  type TOperator = '+' | '-' | '/' | '*' | '(' | ')' | '%' | '√(' | '√'
   // type TOperatorsRating = '+' | '-' | '/' | '*'
   const operatorsRating: IRating = {
     '+': 1,
@@ -18,17 +18,33 @@ export const convertToRPN = (userExpression: string) => {
     '*': 2,
   };
 
-  formattedUserExpression.forEach((value: string) => {
+  interface IUnaryOperator {
+    sqrt: '√';
+  }
+  const unaryOperatorMap: IUnaryOperator = {
+    sqrt: '√',
+  };
+
+
+  userExpressionRange.forEach((value: string) => {
     const isNumber = !isNaN(Number(value));
     const isOperator = isNaN(Number(value));
+    const unaryOperatorList = Object.values(unaryOperatorMap);
+
 
     if (isNumber) {
       // если число -->  добавить  в очередь
+      if (unaryOperatorList.includes(stack[stack.length - 1])) { // если верхний оператор в стэке является унарным
+        queue += stack.pop();
+      }
       queue += `${value} `;
     }
     if (isOperator) {
       // если оператор или скобка,
       const operator = value as TOperator;
+      if(operator === '√') {
+        stack.push(`${operator}(`);
+      }
 
       if (stack.length === 0) {
         //при этом стэк пустой --> пушим в стэк

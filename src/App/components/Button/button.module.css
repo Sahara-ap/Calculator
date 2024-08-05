@@ -13,7 +13,7 @@ button {
   cursor: pointer;
 }
 
-.specialButton {
+.equalButton {
   justify-self: center;
   width: 60px;
   height: 60px;

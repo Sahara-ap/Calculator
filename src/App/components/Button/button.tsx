@@ -1,12 +1,21 @@
 import React from 'react';
 
 import S from './Button.module.css';
+import { useButtonAttributes } from 'src/App/hooks/useButtonAttributes';
+import { IButtonProps } from './types/button-props.interface';
 
-interface IButtonProps {
-  text: string;
-}
-export const Button: React.FC<IButtonProps> = ({ text }) => {
-  const classButton = text !== '=' ? 'button' : 'specialButton';
+export const Button: React.FC<IButtonProps> = ({buttonValue, ...props}) => {
 
-  return <button className={S[classButton]}>{text}</button>;
+  const {className, handleClick} = useButtonAttributes({buttonValue, ...props});
+
+  return (
+    <button
+      className={S[className]}
+      onClick={handleClick}
+    >
+      {buttonValue}
+    </button>
+
+  );
 };
+

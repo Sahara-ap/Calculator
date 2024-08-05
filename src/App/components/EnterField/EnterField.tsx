@@ -1,22 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import S from './EnterField.module.css';
 
-export const EnterField: React.FC = () => {
-  const [inputValue, setInputValue] = useState('');
-  const handleInputChange = (value: string) => {
-    setInputValue(value);
-  };
+interface IEnterFieldProps {
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  userValues: string;
+  onLoadCb: (el: HTMLInputElement) => void;
+}
+
+export const EnterField: React.FC<IEnterFieldProps> = ({
+  userValues,
+  onChange,
+  onLoadCb,
+}) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect (() => {
+    if (inputRef && inputRef.current) {
+      onLoadCb(inputRef.current);
+    }
+  }, [onLoadCb]);
 
   return (
     <div className={S.inputWrapper}>
       <input
         className={S.input}
-        type='text'
-        onChange={(event) => handleInputChange(event.target.value)}
-        value={inputValue}
+        ref={inputRef}
+        type="text"
+        onChange={onChange}
+        value={userValues}
+        autoFocus
       />
     </div>
   );
-
 };
