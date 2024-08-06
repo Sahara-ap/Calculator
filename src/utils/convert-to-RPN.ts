@@ -1,3 +1,5 @@
+import { NBSP_JS } from './constants/nbsp.constant';
+
 export const convertToRPN = (userExpression: string) => {
   const userExpressionRange = userExpression.split(' ');
   const stack: TOperator[] = [];
@@ -8,43 +10,59 @@ export const convertToRPN = (userExpression: string) => {
     '-': number;
     '/': number;
     '*': number;
+    '√': number;
+    '(': number;
+    ')': number;
   }
-  type TOperator = '+' | '-' | '/' | '*' | '(' | ')' | '%' | '√(' | '√'
+  // type TOperator = '+' | '-' | '/' | '*' | '(' | ')' | '%' | '√(' | '√';
+  type TOperator = '+' | '-' | '/' | '*' | '(' | ')' | '%' | '√';
   // type TOperatorsRating = '+' | '-' | '/' | '*'
   const operatorsRating: IRating = {
     '+': 1,
     '-': 1,
     '/': 2,
     '*': 2,
+    '√': 10,
+    '(': -10,
+    ')': -20,
   };
 
   interface IUnaryOperator {
-    sqrt: '√';
+    sqrt: string;
   }
   const unaryOperatorMap: IUnaryOperator = {
     sqrt: '√',
   };
 
+  enum ECategory {
+    Service = 'service',
+    BinaryOperator = 'binary-operator',
+    Digit = 'digit',
+  }
+  const unaryOperatorList = Object.values(unaryOperatorMap) as string[];
 
   userExpressionRange.forEach((value: string) => {
     const isNumber = !isNaN(Number(value));
     const isOperator = isNaN(Number(value));
-    const unaryOperatorList = Object.values(unaryOperatorMap);
-
+    const isUnaryOperator = unaryOperatorList.includes(value);
 
     if (isNumber) {
-      // если число -->  добавить  в очередь
-      if (unaryOperatorList.includes(stack[stack.length - 1])) { // если верхний оператор в стэке является унарным
-        queue += stack.pop();
+      // если число -->  добавить  в очередь сразу
+      queue += `${value}${NBSP_JS}`; //сначала число в очередь
+
+      if (
+        unaryOperatorList.includes(stack[stack.length - 1]) &&
+        stack.length > 0
+      ) {
+        // затем, если верхний оператор в стэке является унарным
+        const lastOperatorInStack = stack.pop() as TOperator;
+        queue += `${lastOperatorInStack}${NBSP_JS}`; //унарный оператор --> в очередь
       }
-      queue += `${value} `;
     }
+
     if (isOperator) {
       // если оператор или скобка,
       const operator = value as TOperator;
-      if(operator === '√') {
-        stack.push(`${operator}(`);
-      }
 
       if (stack.length === 0) {
         //при этом стэк пустой --> пушим в стэк
@@ -60,29 +78,46 @@ export const convertToRPN = (userExpression: string) => {
         }
 
         if (
-          operator in operatorsRating
-          && operator !== '(' && operator !== ')' && operator !== '%' &&
-          topOperatorInStack !== '(' && topOperatorInStack !== ')' && topOperatorInStack !== '%' &&
+          operator in operatorsRating &&
+          operator !== '(' &&
+          operator !== ')' &&
+          // topOperatorInStack !== '(' &&
+          // topOperatorInStack !== ')' &&
+          operator !== '%' &&
+          topOperatorInStack !== '%' &&
           operatorsRating[operator] <= operatorsRating[topOperatorInStack]
         ) {
-          queue += `${topOperatorInStack} `;
-          stack.pop();
-          const openParenthesisIndex = stack.lastIndexOf('(');
-          if (openParenthesisIndex >= 0) {
-            const stackOperatorsNextOpenParenthesis = stack
-              .splice(openParenthesisIndex + 1)
-              .reverse()
-              .join('');
-            queue += `${stackOperatorsNextOpenParenthesis} `;
+          // queue += `${topOperatorInStack} `;
+          // stack.pop();
+
+          if (unaryOperatorList.includes(stack[stack.length - 1])) {
+            const lastOperatorInStack = stack.pop() || '';
+            queue += `${lastOperatorInStack}${NBSP_JS}`; //если верхний в стэке - унарный, то в очередь сразу
           }
-          stack.push(operator);
+
+          queue += `${stack.pop()}${NBSP_JS}`; //следующий оператор в стэке за унарным автоматом в очередь
+
+          stack.push(operator); //итого если унарник - первый в очередь, затем приоритетный из стэка --> в очередь, в конце оператор из инпута в стэк.
+          // const openParenthesisIndex = stack.lastIndexOf('(');
+          // if (openParenthesisIndex >= 0) {
+          //   const stackOperatorsNextOpenParenthesis = stack
+          //     .splice(openParenthesisIndex + 1)
+          //     .reverse()
+          //     .join('');
+          //   queue += `${stackOperatorsNextOpenParenthesis} `;
+          // }
+
         }
 
         if (
-          operator in operatorsRating
-          && operator !== '(' && operator !== ')' && operator !== '%' &&
-          topOperatorInStack !== '(' && topOperatorInStack !== ')' && topOperatorInStack !== '%' &&
-           operatorsRating[operator] > operatorsRating[topOperatorInStack]
+          operator in operatorsRating &&
+          operator !== '(' &&
+          operator !== ')' &&
+          // topOperatorInStack !== '(' &&
+          // topOperatorInStack !== ')' &&
+          operator !== '%' &&
+          topOperatorInStack !== '%' &&
+          operatorsRating[operator] > operatorsRating[topOperatorInStack]
         ) {
           stack.push(operator);
         }
@@ -91,7 +126,7 @@ export const convertToRPN = (userExpression: string) => {
           while (stack[stack.length - 1] !== '(') {
             //перекидываем из стэка операторы по одному в очередь пока не дойдем до открывающей скобки
 
-            queue += `${stack[stack.length - 1]} `; //здесь перекидываем
+            queue += `${stack[stack.length - 1]}${NBSP_JS}`; //здесь перекидываем
             stack.pop(); // здесь удаляем из стека
           }
           stack.pop(); // открывающую скобку (дошли до нее) просто удаляем из стэка
@@ -100,11 +135,18 @@ export const convertToRPN = (userExpression: string) => {
     }
   });
 
+  //если выражение закончилось, а в стэке есть опреаторы --> перекинуть все в очередь в обратном порядке (LIFO)
+  // if (stack.length > 0) {
+  //   while (stack.length > 0) {
+  //     queue += `${stack[stack.length - 1]} `;
+  //     stack.pop();
+  //   }
+  // }
+
+  //если выражение закончилось, а в стэке есть операторы --> перекинуть все в очередь в обратном порядке (LIFO)
+  //refactor:
   if (stack.length > 0) {
-    while (stack.length > 0) {
-      queue += `${stack[stack.length - 1]} `;
-      stack.pop();
-    }
+    queue += stack.splice(0).reverse().join(' ');
   }
 
   const result = queue.replace(/\s+/g, ' ').trimEnd();
