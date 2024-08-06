@@ -1,23 +1,26 @@
 import { useRef, useState } from 'react';
 import { Button } from './components/Button';
 import { EnterField } from './components/EnterField';
-import { buttonList } from './constants/buttons';
-import { useInputFocus } from './hooks/useInputFocus';
+import { buttonData } from './constants/buttons';
 
 import { calcRpnExpression } from 'src/utils/calc-rpn-expression';
 import { convertToRPN } from 'src/utils/convert-to-RPN';
+import { formatToNumberWithSpaces } from 'src/utils/format-to-number-with-spaces';
 import { formatUserExpression } from 'src/utils/format-user-expression';
 import { removeOperatorsAndSpacesFromEnd } from 'src/utils/remove-operators-and-spaces-from-end';
-import { splitDigits } from 'src/utils/split-digits';
+
+import { useEqualByEnter } from './hooks/useEqualByEnter';
+import { useInputFocus } from './hooks/useInputFocus';
+import { useResetByEscape } from './hooks/useResetByEscape';
 
 import S from './App.module.css';
-import { useResetByEscape } from './hooks/useResetByEscape';
-import { useEqualByEnter } from './hooks/useEqualByEnter';
 
 export function App(): JSX.Element {
   const [formattedUserInput, setFormattedUserInput] = useState('');
-  const [result, setResult] = useState('');
+  const [result, setResult] = useState<string | undefined>('');
   const enterFieldRef = useRef<HTMLInputElement | null>(null);
+
+  const {buttonValues} = buttonData;
 
   const getInputRefCb = (el: HTMLInputElement) => {
     if (enterFieldRef) {
@@ -40,7 +43,7 @@ export function App(): JSX.Element {
       removeOperatorsAndSpacesFromEnd(formattedUserInput);
     const rpnValue = convertToRPN(formattedUserInputWithoutNonNumericEnd);
     const formattedRpnValue = calcRpnExpression(rpnValue);
-    setResult(splitDigits(String(formattedRpnValue)));
+    setResult((formatToNumberWithSpaces((formattedRpnValue))));
     setFormattedUserInput('');
   };
 
@@ -66,10 +69,12 @@ export function App(): JSX.Element {
             onChange={handleInputChange}
             onLoadCb={getInputRefCb}
           />
-          <div className={S.storyField}>{result}</div>
+          <div className={S.resultField}>
+            {result !== undefined ? result : 'oops!'}
+          </div>
         </div>
         <div className={S.buttonsWrapper}>
-          {buttonList.map((buttonValue) => (
+          {buttonValues.map((buttonValue) => (
             <Button
               key={buttonValue}
               buttonValue={buttonValue}

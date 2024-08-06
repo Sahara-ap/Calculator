@@ -13,7 +13,6 @@ export const useButtonAttributes = ({
     onSqrt: (value: string) => void;
     onButtonClick: (value: string) => void;
   }
-
 ) => {
   let className = '';
   let handleClick = null;
@@ -37,5 +36,4 @@ export const useButtonAttributes = ({
   }
 
   return {className, handleClick};
-
 };

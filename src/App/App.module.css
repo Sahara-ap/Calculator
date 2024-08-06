@@ -39,22 +39,30 @@
   }
 }
 .display {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 45px;
-  min-height: 192px;
+  min-height: 202px;
 
   @media (max-width: 767px) {
     margin-bottom: 90px;
   }
 }
 
-.storyField {
+.resultField {
   padding-top: 10px;
   padding-bottom: 20px;
+  min-height: 78px;
   font-size: 40px;
+  line-height: 44px;
   font-weight: 700;
   color: #fff;
   text-align: right;
   border-bottom: 2px solid rgba(255 255 255 / 0.5);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
 }
 
 .buttonsWrapper {
