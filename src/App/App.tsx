@@ -11,6 +11,8 @@ import { removeOperatorsAndSpacesFromEnd } from 'src/utils/remove-operators-and-
 import { splitDigits } from 'src/utils/split-digits';
 
 import S from './App.module.css';
+import { useResetByEscape } from './hooks/useResetByEscape';
+import { useEqualByEnter } from './hooks/useEqualByEnter';
 
 export function App(): JSX.Element {
   const [formattedUserInput, setFormattedUserInput] = useState('');
@@ -44,14 +46,16 @@ export function App(): JSX.Element {
 
   const handleReset = () => {
     setFormattedUserInput('');
+    setResult('');
   };
 
   const handleSqrt = (value: string) => {
-
     setFormattedUserInput((prev) => formatUserExpression(`${prev}${value}(`));
   };
 
   useInputFocus(enterFieldRef.current);
+  useEqualByEnter(handleEqual);
+  useResetByEscape(handleReset);
 
   return (
     <div className={S.calcWrapper}>
