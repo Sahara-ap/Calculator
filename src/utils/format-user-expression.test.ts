@@ -47,6 +47,7 @@ describe('format user expression', () => {
   it('should format correctly', () => {
     expect(formatUserExpression('1+2*√(16+9)+4')).toBe('1 + 2 * √ ( 16 + 9 ) + 4');
   });
+
   it('should format correctly', () => {
     expect(formatUserExpression('1+2*√(16+9*10)+4')).toBe('1 + 2 * √ ( 16 + 9 * 10 ) + 4');
   });

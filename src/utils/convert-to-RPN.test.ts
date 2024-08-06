@@ -15,14 +15,14 @@ describe('convert user expression to reverse polish notation one', () => {
   });
 
   it('should return right expression', () => {
-    expect(convertToRPN('1 + 2 * √ ( 16 + 9 ) + 4')).toBe(
-      '1 2 16 9 + √ * 4 + +'
-    );
+    expect(convertToRPN('1 + 2 * √ ( 16 + 9 ) + 4')).toBe('1 2 16 9 + √ * 4 + +');
   });
 
   it('should return right expression', () => {
-    expect(convertToRPN('1 + 2 * √ ( 16 + 9 * 10 ) + 4')).toBe(
-      '1 2 16 9 10 * + √ * 4 + +'
-    );
+    expect(convertToRPN('1 + 2 * √ ( 16 + 9 * 10 ) + 4')).toBe('1 2 16 9 10 * + √ * 4 + +');
+  });
+
+  it('should format correctly', () => {
+    expect(convertToRPN('- 5 + 10')).toBe('5 - 10 +');
   });
 });
