@@ -50,7 +50,7 @@ export function App(): JSX.Element {
 
   const handleReset = () => {
     setFormattedUserInput('');
-    setResult('');
+    setResult(' ');
   };
 
   const handleSqrt = (value: string) => {
