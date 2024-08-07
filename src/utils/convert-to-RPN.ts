@@ -7,9 +7,6 @@ export const convertToRPN = (userExpression: string) => {
   const operatorsRating = buttonData.operatorsRating;
   const operatorTypes = buttonData.operatorsTypes;
   const unaryOperatorList = operatorTypes.unary;
-  // const unaryOperatorList = buttonData.buttonsList
-  //   .filter((item) => item.isUnary)
-  //   .map((item) => item.value);
 
   const userExpressionRange = userExpression.split(' ');
   const stack: TOperator[] = [];

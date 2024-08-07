@@ -1,5 +1,5 @@
 import { buttonData } from 'src/App/constants/buttons';
-import { ILocalMath, IPartialOperator, IUnaryOperator } from './types/calc.interface';
+import { ILocalMath } from './types/calc.interface';
 
 export const calcRpnExpression = (rpnExpression: string) => {
   const stack: number[] = [];
@@ -9,15 +9,6 @@ export const calcRpnExpression = (rpnExpression: string) => {
   const unaryOperatorList = operatorsTypes.unary;
   const partialOperatorList = operatorsTypes.partial;
   const binaryOperatorList = operatorsTypes.binary;
-
-  console.log(unaryOperatorList)
-  console.log(partialOperatorList)
-
-  // const unaryOperatorMap: IUnaryOperator = {sqrt: '√'};
-  // const unaryOperatorList = Object.values(unaryOperatorMap);
-
-  // const partialOperatorMap: IPartialOperator = {percent: '%'};
-  // const partialOperatorList = Object.values(partialOperatorMap);
 
   const calc = ({
     leftOperand = 0,
@@ -43,8 +34,6 @@ export const calcRpnExpression = (rpnExpression: string) => {
     const isNumber = !isNaN(Number(value));
     const isUnaryOperator = unaryOperatorList.includes(value);
     const isPartialOperator = partialOperatorList.includes(value);
-    // const isBinaryOperator =
-    //   isNaN(Number(value)) && !isUnaryOperator && !isPartialOperator;
     const isBinaryOperator = binaryOperatorList.includes(value);
 
     switch (true) {

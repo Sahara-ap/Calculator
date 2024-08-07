@@ -248,9 +248,6 @@ const operatorsTypes = buttons
     return acc;
   }, {} as Record<IButtons['type'], string[]>);
 
-  console.log(operatorsTypes.binary.includes('+'))
-
-
 export const buttonData = {buttonValues, operatorsRating, buttonCategories, operatorsTypes, buttonsList: buttons};
 
 
