@@ -1,3 +1,11 @@
+interface IButtons {
+  value: string;
+  category: ECategoryButtons;
+  rating: number | null;
+  isUnary: boolean;
+  type: 'unary' | 'binary' | 'partial' | 'not';
+  isShow: boolean;
+}
 enum EOperator {
     Plus = '+',
     Minus = '-',
@@ -17,6 +25,17 @@ enum ECategoryButtons {
   Equal = 'equal',
 }
 
+interface IOperatorsRating {
+  '+': number;
+  '-': number;
+  '/': number;
+  '*': number;
+  '√': number;
+  '(': number;
+  ')': number;
+  '%': number;
+}
+
 const Rating = {
   Null: null,
   Low: 1,
@@ -26,30 +45,23 @@ const Rating = {
   Parenthesis: -1,
 };
 
-export interface IButtons {
-  value: string;
-  category: ECategoryButtons;
-  rating: number | null;
-  isUnary: boolean;
-  isShow: boolean;
-}
 
 export const buttons:IButtons[] = [
   {
-    // value: '(',
     value: EOperator.OpenParenthesis,
     category: ECategoryButtons.Operator,
     rating: Rating.Parenthesis,
     isUnary: false,
     isShow: false,
+    type: 'not',
   },
   {
-    // value: ')',
     value: EOperator.CloseParenthesis,
     category: ECategoryButtons.Operator,
     rating: Rating.Parenthesis,
     isUnary: false,
     isShow: false,
+    type: 'not',
   },
   {
     value: 'C',
@@ -57,30 +69,31 @@ export const buttons:IButtons[] = [
     rating: Rating.Null,
     isUnary: false,
     isShow: true,
+    type: 'not',
   },
   {
-    // value: '√',
     value: EOperator.Sqrt,
     category: ECategoryButtons.Operator,
     rating: Rating.UnaryOperator,
     isUnary: true,
     isShow: true,
+    type: 'unary',
   },
   {
-    // value: '%',
     value: EOperator.Percent,
     category: ECategoryButtons.Operator,
     rating: Rating.High,
     isUnary: true,
     isShow: true,
+    type: 'partial',
   },
   {
-    // value: '/',
     value: EOperator.Divide,
     category: ECategoryButtons.Operator,
     rating: Rating.Medium,
     isUnary: false,
     isShow: true,
+    type: 'binary',
   },
   {
     value: '7',
@@ -88,6 +101,7 @@ export const buttons:IButtons[] = [
     rating: Rating.Null,
     isUnary: false,
     isShow: true,
+    type: 'not',
   },
   {
     value: '8',
@@ -95,6 +109,7 @@ export const buttons:IButtons[] = [
     rating: Rating.Null,
     isUnary: false,
     isShow: true,
+    type: 'not',
   },
   {
     value: '9',
@@ -102,14 +117,15 @@ export const buttons:IButtons[] = [
     rating: Rating.Null,
     isUnary: false,
     isShow: true,
+    type: 'not',
   },
   {
-    // value: '*',
     value: EOperator.Multiply,
     category: ECategoryButtons.Operator ,
     rating: Rating.Medium,
     isUnary: false,
     isShow: true,
+    type: 'binary',
   },
   {
     value: '4',
@@ -117,6 +133,7 @@ export const buttons:IButtons[] = [
     rating: Rating.Null,
     isUnary: false,
     isShow: true,
+    type: 'not',
   },
   {
     value: '5',
@@ -124,6 +141,7 @@ export const buttons:IButtons[] = [
     rating: Rating.Null,
     isUnary: false,
     isShow: true,
+    type: 'not',
   },
   {
     value: '6',
@@ -131,14 +149,15 @@ export const buttons:IButtons[] = [
     rating: Rating.Null,
     isUnary: false,
     isShow: true,
+    type: 'not',
   },
   {
-    // value: '-',
     value: EOperator.Minus,
     category: ECategoryButtons.Operator,
     rating: Rating.Low,
     isUnary: false,
     isShow: true,
+    type: 'binary',
   },
   {
     value: '1',
@@ -146,6 +165,7 @@ export const buttons:IButtons[] = [
     rating: Rating.Null,
     isUnary: false,
     isShow: true,
+    type: 'not',
   },
   {
     value: '2',
@@ -153,6 +173,7 @@ export const buttons:IButtons[] = [
     rating: Rating.Null,
     isUnary: false,
     isShow: true,
+    type: 'not',
   },
   {
     value: '3',
@@ -160,14 +181,15 @@ export const buttons:IButtons[] = [
     rating: Rating.Null,
     isUnary: false,
     isShow: true,
+    type: 'not',
   },
   {
-    // value: '+',
     value: EOperator.Plus,
     category: ECategoryButtons.Operator,
     rating: Rating.Low,
     isUnary: false,
     isShow: true,
+    type: 'binary',
   },
   {
     value: '0',
@@ -175,6 +197,7 @@ export const buttons:IButtons[] = [
     rating: Rating.Null,
     isUnary: false,
     isShow: true,
+    type: 'not',
   },
   {
     value: '00',
@@ -182,6 +205,7 @@ export const buttons:IButtons[] = [
     rating: Rating.Null,
     isUnary: false,
     isShow: true,
+    type: 'not',
   },
   {
     value: ',',
@@ -189,6 +213,7 @@ export const buttons:IButtons[] = [
     rating: Rating.Null,
     isUnary: false,
     isShow: true,
+    type: 'not',
   },
   {
     value: '=',
@@ -196,6 +221,7 @@ export const buttons:IButtons[] = [
     rating: Rating.Null,
     isUnary: false,
     isShow: true,
+    type: 'not',
   },
 ];
 
@@ -209,15 +235,19 @@ const operatorsRating = buttons
     return Object.assign(acc, {[key]: item.rating});
   }, {} as IOperatorsRating);
 
-export const buttonData = {buttonValues, operatorsRating, buttonCategories, buttonsList: buttons};
+const operatorsTypes = buttons
+  .filter((item) => item.type !== 'not')
+  .reduce<Record<IButtons['type'], string[]>>((acc, item) => {
+    const key = item.type;
+    const value = item.value as EOperator;
+    if (!(key in acc)) {
+      acc[key] = [];
+    }
+    acc[key].push(value);
 
-interface IOperatorsRating {
-  '+': number;
-  '-': number;
-  '/': number;
-  '*': number;
-  '√': number;
-  '(': number;
-  ')': number;
-  '%': number;
-}
+    return acc;
+  }, {} as Record<IButtons['type'], string[]>);
+
+export const buttonData = {buttonValues, operatorsRating, buttonCategories, operatorsTypes, buttonsList: buttons};
+
+

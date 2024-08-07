@@ -1,60 +1,40 @@
-interface ILocalMath {
-  '+': () => number;
-  '-': () => number;
-  '/': () => number;
-  '*': () => number;
-  '√': () => number;
-  '%': () => number;
-}
-
-function calc({
-  leftOperand = 0,
-  rightOperand,
-  operator,
-}: {
-  leftOperand?: number | string;
-  rightOperand: number | string;
-  operator: keyof ILocalMath;
-}) {
-  const localMath: ILocalMath = {
-    '+': () => Number(leftOperand) + Number(rightOperand),
-    '-': () => (Number(leftOperand) ?? 0) - Number(rightOperand),
-    '/': () => Number(leftOperand) / Number(rightOperand),
-    '*': () => Number(leftOperand) * Number(rightOperand),
-    '√': () => Math.sqrt(Number(rightOperand)),
-    '%': () => (Number(leftOperand) * Number(rightOperand)) / 100,
-  };
-  return localMath[operator]();
-}
-
-interface IUnaryOperator {
-  sqrt: '√';
-}
-const unaryOperatorMap: IUnaryOperator = {
-  sqrt: '√',
-};
-const unaryOperatorList = Object.values(unaryOperatorMap);
-
-interface IPartialOperator {
-  percent: '%';
-}
-const partialOperatorMap: IPartialOperator = {
-  percent: '%',
-};
-const partialOperatorList = Object.values(partialOperatorMap);
+import { buttonData } from 'src/App/constants/buttons';
+import { ILocalMath } from './types/calc.interface';
 
 export const calcRpnExpression = (rpnExpression: string) => {
   const stack: number[] = [];
   const rpnRange = rpnExpression.split(' ');
 
+  const operatorsTypes = buttonData.operatorsTypes;
+  const unaryOperatorList = operatorsTypes.unary;
+  const partialOperatorList = operatorsTypes.partial;
+  const binaryOperatorList = operatorsTypes.binary;
+
+  const calc = ({
+    leftOperand = 0,
+    rightOperand,
+    operator,
+  }: {
+    leftOperand?: number | string;
+    rightOperand: number | string;
+    operator: keyof ILocalMath;
+  }) => {
+    const localMath: ILocalMath = {
+      '+': () => Number(leftOperand) + Number(rightOperand),
+      '-': () => (Number(leftOperand) ?? 0) - Number(rightOperand),
+      '/': () => Number(leftOperand) / Number(rightOperand),
+      '*': () => Number(leftOperand) * Number(rightOperand),
+      '√': () => Math.sqrt(Number(rightOperand)),
+      '%': () => (Number(leftOperand) * Number(rightOperand)) / 100,
+    };
+    return localMath[operator]();
+  };
+
   rpnRange.forEach((value) => {
     const isNumber = !isNaN(Number(value));
     const isUnaryOperator = unaryOperatorList.includes(value);
     const isPartialOperator = partialOperatorList.includes(value);
-    const isBinaryOperator =
-      isNaN(Number(value)) &&
-      !isUnaryOperator &&
-      !isPartialOperator;
+    const isBinaryOperator = binaryOperatorList.includes(value);
 
     switch (true) {
       case isBinaryOperator && stack.length >= 1: {

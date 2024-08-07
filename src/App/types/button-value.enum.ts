@@ -1,4 +1,4 @@
-export enum EButtonValue {
+export enum EButtonValueForHandle {
   equal = '=',
   reset = 'C',
   sqrt = '√',
