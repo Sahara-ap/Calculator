@@ -6,11 +6,3 @@ export interface ILocalMath {
   '√': () => number;
   '%': () => number;
 }
-
-export interface IUnaryOperator {
-  sqrt: '√';
-}
-
-export interface IPartialOperator {
-  percent: '%';
-}

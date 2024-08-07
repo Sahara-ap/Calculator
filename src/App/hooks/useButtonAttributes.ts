@@ -1,4 +1,4 @@
-import { EButtonValue } from 'src/App/types/button-value.enum';
+import { EButtonValueForHandle } from 'src/App/types/button-value.enum';
 
 export const useButtonAttributes = ({
   buttonValue,
@@ -7,7 +7,7 @@ export const useButtonAttributes = ({
   onSqrt,
   onButtonClick,
 }: {
-  buttonValue: EButtonValue | string;
+  buttonValue: EButtonValueForHandle | string;
     onEqual: () => void;
     onReset: () => void;
     onSqrt: (value: string) => void;
@@ -18,17 +18,17 @@ export const useButtonAttributes = ({
   let handleClick = null;
 
   switch (buttonValue) {
-    case EButtonValue.equal:
+    case EButtonValueForHandle.equal:
       className = 'equalButton';
       handleClick = onEqual;
       break;
-    case EButtonValue.reset:
+    case EButtonValueForHandle.reset:
       className = 'resetButton';
       handleClick = onReset;
       break;
-    case EButtonValue.sqrt:
+    case EButtonValueForHandle.sqrt:
       className = 'sqrtButton';
-      handleClick = () => onSqrt(EButtonValue.sqrt);
+      handleClick = () => onSqrt(EButtonValueForHandle.sqrt);
       break;
     default:
       className = 'button';
