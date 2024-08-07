@@ -17,10 +17,11 @@ import S from './App.module.css';
 
 export function App(): JSX.Element {
   const [formattedUserInput, setFormattedUserInput] = useState('');
-  const [result, setResult] = useState<string | undefined>('');
+  const [result, setResult] = useState<string>(' ');
   const enterFieldRef = useRef<HTMLInputElement | null>(null);
 
   const {buttonValues} = buttonData;
+
 
   const getInputRefCb = (el: HTMLInputElement) => {
     if (enterFieldRef) {
@@ -42,8 +43,8 @@ export function App(): JSX.Element {
     const formattedUserInputWithoutNonNumericEnd =
       removeOperatorsAndSpacesFromEnd(formattedUserInput);
     const rpnValue = convertToRPN(formattedUserInputWithoutNonNumericEnd);
-    const formattedRpnValue = calcRpnExpression(rpnValue);
-    setResult((formatToNumberWithSpaces((formattedRpnValue))));
+    const calcResult = calcRpnExpression(rpnValue);
+    setResult(isFinite(calcResult) ? (formatToNumberWithSpaces((calcResult))) : '');
     setFormattedUserInput('');
   };
 
@@ -70,7 +71,7 @@ export function App(): JSX.Element {
             onLoadCb={getInputRefCb}
           />
           <div className={S.resultField}>
-            {result !== undefined ? result : 'oops!'}
+            {result ? result : 'oops!'}
           </div>
         </div>
         <div className={S.buttonsWrapper}>

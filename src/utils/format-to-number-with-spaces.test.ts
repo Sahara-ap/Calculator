@@ -2,9 +2,7 @@ import { NBSP_JS } from './constants/nbsp.constant';
 import { formatToNumberWithSpaces } from './format-to-number-with-spaces';
 
 describe('formatToNumberWithSpaces', () => {
-  it('should return undefined', () => {
-    expect(formatToNumberWithSpaces(undefined)).toBeUndefined();
-  });
+ 
   it('should handle integer values', () => {
     expect(formatToNumberWithSpaces(123456)).toBe(`123${NBSP_JS}456`);
   });

@@ -2,11 +2,8 @@ import { splitDigits } from './split-digits';
 
 //adds spaces between digits groups
 export const formatToNumberWithSpaces = (
-  value: number | string | undefined
-): string | undefined => {
-  if (value === undefined) {
-    return value;
-  }
+  value: number | string
+): string => {
 
   const normalizedValue = value.toString();
 
