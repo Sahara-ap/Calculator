@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Button } from './components/Button/index.js';
+import { Button } from './components/Button/index.ts';
 import { EnterField } from './components/EnterField';
 import { buttonData } from './constants/buttons';
 
