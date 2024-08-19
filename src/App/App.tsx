@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 // import { Button } from './components/Button/index.ts';
-import { Button } from './components/Button/Button.tsx';
+import { Button } from './components/button/button.tsx';
 import { EnterField } from './components/EnterField';
 import { buttonData } from './constants/buttons';
 
@@ -21,8 +21,7 @@ export function App(): JSX.Element {
   const [result, setResult] = useState<string>(' ');
   const enterFieldRef = useRef<HTMLInputElement | null>(null);
 
-  const {buttonValues} = buttonData;
-
+  const { buttonValues } = buttonData;
 
   const getInputRefCb = (el: HTMLInputElement) => {
     if (enterFieldRef) {
@@ -45,7 +44,7 @@ export function App(): JSX.Element {
       removeOperatorsAndSpacesFromEnd(formattedUserInput);
     const rpnValue = convertToRPN(formattedUserInputWithoutNonNumericEnd);
     const calcResult = calcRpnExpression(rpnValue);
-    setResult(isFinite(calcResult) ? (formatToNumberWithSpaces((calcResult))) : '');
+    setResult(isFinite(calcResult) ? formatToNumberWithSpaces(calcResult) : '');
     setFormattedUserInput('');
   };
 
@@ -71,9 +70,7 @@ export function App(): JSX.Element {
             onChange={handleInputChange}
             onLoadCb={getInputRefCb}
           />
-          <div className={S.resultField}>
-            {result ? result : 'oops!'}
-          </div>
+          <div className={S.resultField}>{result ? result : 'oops!'}</div>
         </div>
         <div className={S.buttonsWrapper}>
           {buttonValues.map((buttonValue) => (
