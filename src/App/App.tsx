@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
-import { Button } from './components/Button/index.ts';
+// import { Button } from './components/Button/index.ts';
+import { Button } from './components/Button/Button.tsx';
 import { EnterField } from './components/EnterField';
 import { buttonData } from './constants/buttons';
 
