@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useInnerWidth } from 'src/App/hooks/useInnerWidth';
 
 import S from './EnterField.module.css';
 
@@ -13,7 +14,9 @@ export const EnterField: React.FC<IEnterFieldProps> = ({
   onChange,
   onLoadCb,
 }) => {
+  const {innerWidth} = useInnerWidth();
   const inputRef = useRef<HTMLInputElement>(null);
+  const readOnly = innerWidth <= 600;
 
   useEffect (() => {
     if (inputRef && inputRef.current) {
@@ -30,6 +33,7 @@ export const EnterField: React.FC<IEnterFieldProps> = ({
         onChange={onChange}
         value={userValues}
         autoFocus
+        readOnly={readOnly}
       />
     </div>
   );
