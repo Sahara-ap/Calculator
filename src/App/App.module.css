@@ -9,10 +9,11 @@
   border-radius: 8px;
 
   @media (max-width: 767px) {
-    padding: 0;
-    margin: 0;
     width: auto;
     height: auto;
+    padding: 0;
+    margin: 0;
+    background: linear-gradient(-45deg, #409beb 0%, #16456e 100%);
   }
 
 }
